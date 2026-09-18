@@ -51,6 +51,11 @@ export default function TaskCard({ task, onStatusChange }: TaskCardProps) {
             {new Date(task.dueDate).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' })}
           </span>
           {isOverdue && <span className="text-error-500 font-medium">(Terlewat)</span>}
+          {task.lastEditedByName && (
+            <span className="italic text-gray-400 dark:text-gray-500">
+              · Diedit oleh {task.lastEditedByName}
+            </span>
+          )}
         </div>
       </div>
 
