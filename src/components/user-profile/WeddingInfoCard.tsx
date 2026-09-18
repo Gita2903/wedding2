@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useModal } from "@/hooks/useModal";
 import { PencilIcon } from "@/icons";
-import { useWedding } from "@/context/WeddingContext";
+import { useWedding, Religion } from "@/context/WeddingContext"; // <-- Import Religion di sini
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
 import Button from "../ui/button/Button";
