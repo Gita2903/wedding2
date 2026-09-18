@@ -9,26 +9,35 @@ import Button from "@/components/ui/button/Button";
 import TaskModal from "@/components/timeline/TaskModal";
 
 export default function TimelinePage() {
-  const { data, updateData } = useWedding();
+  const { data, updateTaskStatus, addTask, regenerateTasks } = useWedding();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Auto-generate if empty
   useEffect(() => {
     if (data.onboardingComplete && data.tasks.length === 0) {
       const newTasks = generateTimeline(data);
-      updateData({ tasks: newTasks });
+      regenerateTasks(
+        newTasks.map((t) => ({
+          title: t.title,
+          phase: t.phase,
+          dueDate: t.dueDate,
+          status: t.status,
+        }))
+      );
     }
-  }, [data, updateData]);
+  }, [data, regenerateTasks]);
 
   const handleStatusChange = (taskId: string, newStatus: Task["status"]) => {
-    const updatedTasks = data.tasks.map((task) =>
-      task.id === taskId ? { ...task, status: newStatus } : task
-    );
-    updateData({ tasks: updatedTasks });
+    updateTaskStatus(taskId, newStatus);
   };
 
   const handleAddTask = (newTask: Task) => {
-    updateData({ tasks: [...data.tasks, newTask] });
+    addTask({
+      title: newTask.title,
+      phase: newTask.phase,
+      dueDate: newTask.dueDate,
+      status: newTask.status,
+    });
   };
 
   // Group tasks by phase
@@ -65,7 +74,14 @@ export default function TimelinePage() {
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => {
             const newTasks = generateTimeline(data);
-            updateData({ tasks: newTasks });
+            regenerateTasks(
+              newTasks.map((t) => ({
+                title: t.title,
+                phase: t.phase,
+                dueDate: t.dueDate,
+                status: t.status,
+              }))
+            );
           }}>
             Regenerate
           </Button>
