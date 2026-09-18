@@ -121,7 +121,7 @@ interface WeddingContextType {
     brideName: string;
     weddingDate: string | null;
     city: string;
-    religion: string;
+    religion: Religion | "";
   }) => Promise<void>;
   updateTaskStatus: (taskId: string, status: TaskStatus) => Promise<void>;
   addTask: (task: { title: string; phase: string; dueDate: string; status: TaskStatus }) => Promise<void>;
@@ -150,6 +150,7 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setData((prev) => ({
           ...prev,
           ...fresh,
+          religion: (fresh.religion as Religion | "") ?? "",
           tasks: normalizeTasks((fresh as any).tasks),
           weddingDate: fresh.weddingDate ? new Date(fresh.weddingDate).toISOString() : null,
           onboardingComplete: true,
@@ -169,9 +170,10 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setData((prev) => ({
             ...prev,
             ...dbData,
+            religion: (dbData.religion as Religion | "") ?? "",
             tasks: normalizeTasks((dbData as any).tasks),
             weddingDate: dbData.weddingDate ? new Date(dbData.weddingDate).toISOString() : null,
-            onboardingComplete: true
+            onboardingComplete: true,
           }));
         } else {
           // If no db data, try local storage fallback or just stay default
@@ -245,7 +247,7 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
       brideName: string;
       weddingDate: string | null;
       city: string;
-      religion: string;
+      religion: Religion | "";
     }) => {
       await updateWeddingBasicInfo(fields);
       await refreshFromServer();
