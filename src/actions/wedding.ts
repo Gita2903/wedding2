@@ -154,6 +154,91 @@ export async function updateWeddingBasicInfo(data: {
   return { success: true, wedding };
 }
 
+// --- Task-scoped actions ---
+// These touch ONLY the Task table (never the wedding's scalar fields or the
+// vendors table), and always record who made the change, so:
+//  1. Two partners editing different things at the same time can't clobber
+//     each other's task list (unlike saveWeddingData's full delete+recreate).
+//  2. The UI can show "diedit oleh <nama>" per task.
+
+export async function updateTaskStatus(taskId: string, status: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) throw new Error("Unauthorized");
+
+  const userId = (session.user as any).id;
+  const weddingId = (session.user as any).weddingId;
+  if (!weddingId) throw new Error("Belum punya data pernikahan.");
+
+  const task = await prisma.task.findUnique({ where: { id: taskId } });
+  if (!task || task.weddingId !== weddingId) {
+    throw new Error("Tugas tidak ditemukan.");
+  }
+
+  const updated = await prisma.task.update({
+    where: { id: taskId },
+    data: { status, lastEditedById: userId },
+    include: { lastEditedBy: { select: { name: true } } },
+  });
+
+  return { success: true, task: updated };
+}
+
+export async function addTask(task: {
+  title: string;
+  phase: string;
+  dueDate: string;
+  status: string;
+}) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) throw new Error("Unauthorized");
+
+  const userId = (session.user as any).id;
+  const weddingId = (session.user as any).weddingId;
+  if (!weddingId) throw new Error("Belum punya data pernikahan.");
+
+  const created = await prisma.task.create({
+    data: {
+      title: task.title,
+      phase: task.phase,
+      dueDate: new Date(task.dueDate),
+      status: task.status,
+      weddingId,
+      lastEditedById: userId,
+    },
+    include: { lastEditedBy: { select: { name: true } } },
+  });
+
+  return { success: true, task: created };
+}
+
+// Full reset of the roadmap — this one intentionally replaces every task
+// (that's the point of "Regenerate"), but it's scoped to tasks only, so it
+// never touches vendors like saveWeddingData's version does.
+export async function regenerateTasks(
+  tasks: { title: string; phase: string; dueDate: string; status: string }[]
+) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) throw new Error("Unauthorized");
+
+  const userId = (session.user as any).id;
+  const weddingId = (session.user as any).weddingId;
+  if (!weddingId) throw new Error("Belum punya data pernikahan.");
+
+  await prisma.task.deleteMany({ where: { weddingId } });
+  await prisma.task.createMany({
+    data: tasks.map((t) => ({
+      title: t.title,
+      phase: t.phase,
+      dueDate: new Date(t.dueDate),
+      status: t.status,
+      weddingId,
+      lastEditedById: userId,
+    })),
+  });
+
+  return { success: true };
+}
+
 export async function joinWedding(emailToJoin: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error("Unauthorized");
@@ -188,7 +273,10 @@ export async function getWeddingData() {
     include: {
       wedding: {
         include: {
-          tasks: true,
+          tasks: {
+            include: { lastEditedBy: { select: { name: true } } },
+            orderBy: { createdAt: "asc" },
+          },
           vendors: true,
         }
       }
