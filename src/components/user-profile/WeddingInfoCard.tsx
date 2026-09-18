@@ -60,7 +60,7 @@ export default function WeddingInfoCard() {
         brideName,
         weddingDate,
         city,
-        religion,
+        religion: religion as Religion | "",
       });
       closeModal();
     } finally {
