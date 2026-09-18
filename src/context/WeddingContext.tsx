@@ -23,8 +23,6 @@ export interface Task {
   phase: string;
   dueDate: string; // ISO string
   status: TaskStatus;
-  // Name of whoever last created/changed this task (e.g. a partner).
-  // Undefined/null means no edit has been tracked for it yet.
   lastEditedByName?: string | null;
 }
 
@@ -98,8 +96,7 @@ const defaultData: WeddingData = {
   documents: [],
 };
 
-// Turns the raw rows Prisma returns (Date objects, a nested `lastEditedBy`
-// relation) into the flat shape the rest of the app expects.
+// Normalizers buat ngilangin type mismatch dari Prisma
 function normalizeTasks(rawTasks: any[] | undefined): Task[] {
   if (!rawTasks) return [];
   return rawTasks.map((t) => ({
@@ -107,8 +104,21 @@ function normalizeTasks(rawTasks: any[] | undefined): Task[] {
     title: t.title,
     phase: t.phase,
     dueDate: t.dueDate instanceof Date ? t.dueDate.toISOString() : t.dueDate,
-    status: t.status,
+    status: t.status as TaskStatus,
     lastEditedByName: t.lastEditedBy?.name ?? null,
+  }));
+}
+
+function normalizeVendors(rawVendors: any[] | undefined): Vendor[] {
+  if (!rawVendors) return [];
+  return rawVendors.map((v) => ({
+    id: v.id,
+    name: v.name,
+    category: v.category as VendorCategory,
+    contact: v.contact,
+    priceQuote: v.priceQuote,
+    status: v.status as VendorStatus,
+    notes: v.notes,
   }));
 }
 
@@ -139,10 +149,6 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const dataRef = useRef(data);
   dataRef.current = data;
 
-  // Pulls the latest wedding from the DB and merges it in. Used on mount,
-  // after every task/wedding-info mutation, and by the polling/focus refresh
-  // below — this is what keeps two partners' browsers roughly in sync
-  // without needing a websocket.
   const refreshFromServer = useCallback(async () => {
     try {
       const fresh = await getWeddingData();
@@ -152,6 +158,7 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
           ...fresh,
           religion: (fresh.religion as Religion | "") ?? "",
           tasks: normalizeTasks((fresh as any).tasks),
+          vendors: normalizeVendors((fresh as any).vendors),
           weddingDate: fresh.weddingDate ? new Date(fresh.weddingDate).toISOString() : null,
           onboardingComplete: true,
         }));
@@ -172,11 +179,11 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
             ...dbData,
             religion: (dbData.religion as Religion | "") ?? "",
             tasks: normalizeTasks((dbData as any).tasks),
+            vendors: normalizeVendors((dbData as any).vendors),
             weddingDate: dbData.weddingDate ? new Date(dbData.weddingDate).toISOString() : null,
             onboardingComplete: true,
           }));
         } else {
-          // If no db data, try local storage fallback or just stay default
           const savedData = localStorage.getItem("wedding_data_fallback");
           if (savedData) {
             setData(JSON.parse(savedData));
@@ -191,11 +198,6 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     loadData();
   }, []);
 
-  // Keep two partners' browsers roughly in sync: re-pull from the DB
-  // periodically while the tab is visible, and immediately whenever the tab
-  // regains focus/visibility. This is deliberately simple polling rather
-  // than a websocket — good enough for "did my partner just tick something
-  // off" without adding realtime infra.
   useEffect(() => {
     if (!isLoaded || !dataRef.current.onboardingComplete) return;
 
@@ -235,12 +237,6 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
-  // Updates ONLY the basic wedding fields (couple names, date, city, religion)
-  // via a scoped server action that never touches tasks/vendors. After saving,
-  // it re-fetches the wedding from DB so this browser also picks up any
-  // task/vendor changes a partner made elsewhere — instead of `updateData`,
-  // which would push this browser's possibly-stale local tasks/vendors and
-  // silently overwrite the partner's progress.
   const updateBasicInfo = useCallback(
     async (fields: {
       groomName: string;
@@ -255,9 +251,6 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     [refreshFromServer]
   );
 
-  // Changes a single task's status. Optimistic-updates the local list first
-  // so the click feels instant, then confirms with the server and refreshes
-  // so any change a partner made elsewhere also shows up.
   const updateTaskStatus = useCallback(
     async (taskId: string, status: TaskStatus) => {
       setData((prev) => ({
@@ -286,9 +279,6 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     [refreshFromServer]
   );
 
-  // Full roadmap reset — replaces every task. Scoped to tasks only, unlike
-  // saveWeddingData's version which would also drag along (and overwrite)
-  // whatever vendors happen to be in this browser's local state.
   const regenerateTasks = useCallback(
     async (tasks: { title: string; phase: string; dueDate: string; status: TaskStatus }[]) => {
       try {
