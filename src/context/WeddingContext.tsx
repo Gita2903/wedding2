@@ -1,7 +1,14 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { getWeddingData, saveWeddingData, updateWeddingBasicInfo } from "@/actions/wedding";
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
+import {
+  getWeddingData,
+  saveWeddingData,
+  updateWeddingBasicInfo,
+  updateTaskStatus as updateTaskStatusAction,
+  addTask as addTaskAction,
+  regenerateTasks as regenerateTasksAction,
+} from "@/actions/wedding";
 
 // --- Types ---
 
@@ -16,6 +23,9 @@ export interface Task {
   phase: string;
   dueDate: string; // ISO string
   status: TaskStatus;
+  // Name of whoever last created/changed this task (e.g. a partner).
+  // Undefined/null means no edit has been tracked for it yet.
+  lastEditedByName?: string | null;
 }
 
 export interface Vendor {
@@ -88,6 +98,20 @@ const defaultData: WeddingData = {
   documents: [],
 };
 
+// Turns the raw rows Prisma returns (Date objects, a nested `lastEditedBy`
+// relation) into the flat shape the rest of the app expects.
+function normalizeTasks(rawTasks: any[] | undefined): Task[] {
+  if (!rawTasks) return [];
+  return rawTasks.map((t) => ({
+    id: t.id,
+    title: t.title,
+    phase: t.phase,
+    dueDate: t.dueDate instanceof Date ? t.dueDate.toISOString() : t.dueDate,
+    status: t.status,
+    lastEditedByName: t.lastEditedBy?.name ?? null,
+  }));
+}
+
 // --- Context & Provider ---
 interface WeddingContextType {
   data: WeddingData;
@@ -99,6 +123,10 @@ interface WeddingContextType {
     city: string;
     religion: string;
   }) => Promise<void>;
+  updateTaskStatus: (taskId: string, status: TaskStatus) => Promise<void>;
+  addTask: (task: { title: string; phase: string; dueDate: string; status: TaskStatus }) => Promise<void>;
+  regenerateTasks: (tasks: { title: string; phase: string; dueDate: string; status: TaskStatus }[]) => Promise<void>;
+  refreshFromServer: () => Promise<void>;
   resetData: () => void;
   isLoaded: boolean;
 }
@@ -108,6 +136,29 @@ const WeddingContext = createContext<WeddingContextType | undefined>(undefined);
 export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<WeddingData>(defaultData);
   const [isLoaded, setIsLoaded] = useState(false);
+  const dataRef = useRef(data);
+  dataRef.current = data;
+
+  // Pulls the latest wedding from the DB and merges it in. Used on mount,
+  // after every task/wedding-info mutation, and by the polling/focus refresh
+  // below — this is what keeps two partners' browsers roughly in sync
+  // without needing a websocket.
+  const refreshFromServer = useCallback(async () => {
+    try {
+      const fresh = await getWeddingData();
+      if (fresh) {
+        setData((prev) => ({
+          ...prev,
+          ...fresh,
+          tasks: normalizeTasks((fresh as any).tasks),
+          weddingDate: fresh.weddingDate ? new Date(fresh.weddingDate).toISOString() : null,
+          onboardingComplete: true,
+        }));
+      }
+    } catch (e) {
+      console.error("Failed to refresh wedding data", e);
+    }
+  }, []);
 
   // Load from DB on mount
   useEffect(() => {
@@ -118,6 +169,7 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setData((prev) => ({
             ...prev,
             ...dbData,
+            tasks: normalizeTasks((dbData as any).tasks),
             weddingDate: dbData.weddingDate ? new Date(dbData.weddingDate).toISOString() : null,
             onboardingComplete: true
           }));
@@ -137,8 +189,38 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     loadData();
   }, []);
 
+  // Keep two partners' browsers roughly in sync: re-pull from the DB
+  // periodically while the tab is visible, and immediately whenever the tab
+  // regains focus/visibility. This is deliberately simple polling rather
+  // than a websocket — good enough for "did my partner just tick something
+  // off" without adding realtime infra.
+  useEffect(() => {
+    if (!isLoaded || !dataRef.current.onboardingComplete) return;
+
+    const POLL_MS = 20000;
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        refreshFromServer();
+      }
+    }, POLL_MS);
+
+    const handleVisible = () => {
+      if (document.visibilityState === "visible") {
+        refreshFromServer();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisible);
+    window.addEventListener("focus", handleVisible);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisible);
+      window.removeEventListener("focus", handleVisible);
+    };
+  }, [isLoaded, data.onboardingComplete, refreshFromServer]);
+
   const updateData = useCallback(async (newData: Partial<WeddingData>) => {
-    const updated = { ...data, ...newData };
+    const updated = { ...dataRef.current, ...newData };
     setData(updated);
     localStorage.setItem("wedding_data_fallback", JSON.stringify(updated));
 
@@ -149,7 +231,7 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
         console.error("Failed to save to DB", e);
       }
     }
-  }, [data]);
+  }, []);
 
   // Updates ONLY the basic wedding fields (couple names, date, city, religion)
   // via a scoped server action that never touches tasks/vendors. After saving,
@@ -166,20 +248,55 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
       religion: string;
     }) => {
       await updateWeddingBasicInfo(fields);
-
-      const fresh = await getWeddingData();
-      if (fresh) {
-        setData((prev) => ({
-          ...prev,
-          ...fresh,
-          weddingDate: fresh.weddingDate
-            ? new Date(fresh.weddingDate).toISOString()
-            : null,
-          onboardingComplete: true,
-        }));
-      }
+      await refreshFromServer();
     },
-    []
+    [refreshFromServer]
+  );
+
+  // Changes a single task's status. Optimistic-updates the local list first
+  // so the click feels instant, then confirms with the server and refreshes
+  // so any change a partner made elsewhere also shows up.
+  const updateTaskStatus = useCallback(
+    async (taskId: string, status: TaskStatus) => {
+      setData((prev) => ({
+        ...prev,
+        tasks: prev.tasks.map((t) => (t.id === taskId ? { ...t, status } : t)),
+      }));
+      try {
+        await updateTaskStatusAction(taskId, status);
+      } catch (e) {
+        console.error("Failed to update task status", e);
+      }
+      await refreshFromServer();
+    },
+    [refreshFromServer]
+  );
+
+  const addTask = useCallback(
+    async (task: { title: string; phase: string; dueDate: string; status: TaskStatus }) => {
+      try {
+        await addTaskAction(task);
+      } catch (e) {
+        console.error("Failed to add task", e);
+      }
+      await refreshFromServer();
+    },
+    [refreshFromServer]
+  );
+
+  // Full roadmap reset — replaces every task. Scoped to tasks only, unlike
+  // saveWeddingData's version which would also drag along (and overwrite)
+  // whatever vendors happen to be in this browser's local state.
+  const regenerateTasks = useCallback(
+    async (tasks: { title: string; phase: string; dueDate: string; status: TaskStatus }[]) => {
+      try {
+        await regenerateTasksAction(tasks);
+      } catch (e) {
+        console.error("Failed to regenerate tasks", e);
+      }
+      await refreshFromServer();
+    },
+    [refreshFromServer]
   );
 
   const resetData = () => {
@@ -189,7 +306,17 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   return (
     <WeddingContext.Provider
-      value={{ data, updateData, updateBasicInfo, resetData, isLoaded }}
+      value={{
+        data,
+        updateData,
+        updateBasicInfo,
+        updateTaskStatus,
+        addTask,
+        regenerateTasks,
+        refreshFromServer,
+        resetData,
+        isLoaded,
+      }}
     >
       {children}
     </WeddingContext.Provider>
