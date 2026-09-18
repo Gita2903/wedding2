@@ -124,7 +124,7 @@ export default function BudgetPage() {
                   return (
                     <div key={payment.id} className="flex items-center justify-between border-b border-gray-100 pb-4 last:border-0 last:pb-0 dark:border-gray-800">
                       <div>
-                        <p className="font-medium text-gray-800 dark:text-white/90">{payment.description || "Pembayaran"}</p>
+                        <p className="font-medium text-gray-800 dark:text-white/90">{payment.note || "Pembayaran"}</p>
                         <p className="text-xs text-gray-500">{vendorName} • {new Date(payment.date).toLocaleDateString("id-ID")}</p>
                       </div>
                       <div className="text-right">

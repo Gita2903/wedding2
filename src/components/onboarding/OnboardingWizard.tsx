@@ -1,6 +1,6 @@
 "use client";
 
-import { useWedding } from "@/context/WeddingContext";
+import { Religion, useWedding } from "@/context/WeddingContext";
 import { useRouter } from "@/i18n/navigation";
 import { useState } from "react";
 import StepCoupleName from "./steps/StepCoupleName";
@@ -17,7 +17,16 @@ export default function OnboardingWizard() {
   const totalSteps = 6;
 
   // Temporary state for the wizard so we don't pollute global state until finish
-  const [wizardData, setWizardData] = useState({
+  const [wizardData, setWizardData] = useState<{
+    groomName: string;
+    brideName: string;
+    weddingDate: string | null;
+    estimatedBudget: number;
+    estimatedGuests: number;
+    city: string;
+    religion: Religion | "";
+    customs: string[];
+  }>({
     groomName: data.groomName || "",
     brideName: data.brideName || "",
     weddingDate: data.weddingDate || null,

@@ -31,7 +31,13 @@ export default function NotificationDropdown() {
 
   const notifications = useMemo(() => {
     const now = new Date();
-    const notifs = [];
+    const notifs: {
+      id: string;
+      title: string;
+      desc: string;
+      time: string;
+      icon: React.ReactNode;
+    }[] = [];
     
     tasks.forEach(task => {
       if (task.status === "Selesai") return;

@@ -19,7 +19,7 @@ export default function PaymentModal({ isOpen, onClose, onSave, vendorId, vendor
   const [formData, setFormData] = useState<Partial<Payment>>({
     amount: 0,
     date: new Date().toISOString(),
-    description: "",
+    note: "",
     vendorId: vendorId,
   });
 
@@ -29,7 +29,7 @@ export default function PaymentModal({ isOpen, onClose, onSave, vendorId, vendor
         ...formData,
         id: uuidv4(),
       } as Payment);
-      setFormData({ amount: 0, date: new Date().toISOString(), description: "", vendorId });
+      setFormData({ amount: 0, date: new Date().toISOString(), note: "", vendorId });
     }
   };
 
@@ -67,8 +67,8 @@ export default function PaymentModal({ isOpen, onClose, onSave, vendorId, vendor
           <Label>Keterangan (Contoh: DP 1, Pelunasan)</Label>
           <Input 
             type="text" 
-            value={formData.description || ""} 
-            onChange={(e) => setFormData({...formData, description: e.target.value})} 
+            value={formData.note || ""} 
+            onChange={(e) => setFormData({...formData, note: e.target.value})} 
           />
         </div>
       </div>
