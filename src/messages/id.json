@@ -1,0 +1,42 @@
+{
+  "common": {
+    "home": "Beranda",
+    "edit": "Edit",
+    "close": "Tutup",
+    "saveChanges": "Simpan Perubahan",
+    "viewMore": "Lihat Lebih",
+    "delete": "Hapus",
+    "filter": "Filter",
+    "seeAll": "Lihat Semua",
+    "add": "Tambah",
+    "cancel": "Batal"
+  },
+  "sidebar": {
+    "groups": {
+      "menu": "Menu Utama",
+      "others": "Lainnya"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "timeline": "Timeline",
+      "vendors": "Vendor",
+      "budget": "Budget",
+      "documents": "Dokumen",
+      "profile": "Profil"
+    }
+  },
+  "header": {
+    "searchPlaceholder": "Cari sesuatu...",
+    "toggleSidebar": "Toggle Sidebar",
+    "notifications": {
+      "title": "Notifikasi",
+      "viewAll": "Lihat Semua Notifikasi"
+    }
+  },
+  "userDropdown": {
+    "editProfile": "Edit Profil",
+    "accountSettings": "Pengaturan Akun",
+    "language": "Bahasa",
+    "signOut": "Keluar"
+  }
+}

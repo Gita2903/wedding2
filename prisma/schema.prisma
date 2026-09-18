@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  
+  // A user belongs to one wedding
+  weddingId String?
+  wedding   Wedding? @relation(fields: [weddingId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Wedding {
+  id              String   @id @default(uuid())
+  groomName       String
+  brideName       String
+  weddingDate     DateTime?
+  estimatedBudget Float    @default(0)
+  estimatedGuests Int      @default(0)
+  city            String   @default("")
+  religion        String   @default("")
+
+  users           User[]
+  tasks           Task[]
+  vendors         Vendor[]
+  documents       DocumentItem[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Task {
+  id        String   @id @default(uuid())
+  title     String
+  phase     String
+  dueDate   DateTime
+  status    String   // "Belum Mulai" | "Sedang Proses" | "Selesai" | "Terlewat"
+  
+  weddingId String
+  wedding   Wedding  @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Vendor {
+  id         String   @id @default(uuid())
+  name       String
+  category   String   // "Venue" | "Catering" | "WO" ...
+  contact    String   @default("")
+  priceQuote Float    @default(0)
+  status     String   // "Riset" | "Nego" | "Booked" | "DP" | "Lunas" | "Dibatalkan"
+  notes      String   @db.Text
+  
+  weddingId  String
+  wedding    Wedding  @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+  
+  payments   Payment[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  amount    Float
+  date      DateTime
+  note      String   @default("")
+
+  vendorId  String
+  vendor    Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DocumentItem {
+  id          String   @id @default(uuid())
+  name        String
+  description String   @db.Text
+  status      String   // "Belum" | "Sedang Urus" | "Selesai"
+  deadline    DateTime
+
+  weddingId   String
+  wedding     Wedding  @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
