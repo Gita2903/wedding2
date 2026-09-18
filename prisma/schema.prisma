@@ -17,6 +17,9 @@ model User {
   weddingId String?
   wedding   Wedding? @relation(fields: [weddingId], references: [id])
 
+  // Tasks this user was the last to edit (status change, edit, etc.)
+  editedTasks Task[] @relation("TaskLastEditedBy")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -46,9 +49,13 @@ model Task {
   phase     String
   dueDate   DateTime
   status    String   // "Belum Mulai" | "Sedang Proses" | "Selesai" | "Terlewat"
-  
+
   weddingId String
   wedding   Wedding  @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  // Who last created/changed this task, so the UI can show "diedit oleh ..."
+  lastEditedById String?
+  lastEditedBy   User?   @relation("TaskLastEditedBy", fields: [lastEditedById], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
