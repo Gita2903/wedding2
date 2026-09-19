@@ -91,20 +91,25 @@ const AppHeader: React.FC = () => {
           </button>
 
           <Link href="/" className="xl:hidden">
-            <Image
-              width={154}
-              height={32}
-              className="dark:hidden"
-              src="/images/logo/logo.svg"
-              alt="Logo"
-            />
-            <Image
-              width={154}
-              height={32}
-              className="hidden dark:block"
-              src="/images/logo/logo-dark.svg"
-              alt="Logo"
-            />
+            <span className="flex items-center gap-2">
+              <span className="h-8 w-8 overflow-hidden rounded-lg">
+                <Image
+                  width={154}
+                  height={32}
+                  className="max-w-none dark:hidden"
+                  src="/images/logo/logo.svg"
+                  alt="Nol ke Nikah"
+                />
+                <Image
+                  width={154}
+                  height={32}
+                  className="hidden max-w-none dark:block"
+                  src="/images/logo/logo-dark.svg"
+                  alt="Nol ke Nikah"
+                />
+              </span>
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">Nol ke Nikah</span>
+            </span>
           </Link>
 
           <button

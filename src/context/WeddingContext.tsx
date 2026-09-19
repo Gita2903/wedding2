@@ -167,7 +167,7 @@ interface WeddingContextType {
 const WeddingContext = createContext<WeddingContextType | undefined>(undefined);
 
 export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { update: updateSession } = useSession();
+  const { update: updateSession, status: sessionStatus } = useSession();
   const [data, setData] = useState<WeddingData>(defaultData);
   const [isLoaded, setIsLoaded] = useState(false);
   const dataRef = useRef(data);
@@ -194,6 +194,8 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Load from DB on mount
   useEffect(() => {
+    if (sessionStatus !== "authenticated") return;
+
     async function loadData() {
       try {
         const dbData = await getWeddingData();
@@ -220,7 +222,7 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
     }
     loadData();
-  }, []);
+  }, [sessionStatus]);
 
   useEffect(() => {
     if (!isLoaded || !dataRef.current.onboardingComplete) return;
