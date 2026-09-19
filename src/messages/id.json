@@ -38,5 +38,10 @@
     "accountSettings": "Pengaturan Akun",
     "language": "Bahasa",
     "signOut": "Keluar"
+  },
+  "notFound": {
+    "error": "ERROR",
+    "message": "Maaf, halaman yang Anda cari tidak ditemukan!",
+    "backHome": "Kembali ke Beranda"
   }
 }

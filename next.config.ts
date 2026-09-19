@@ -6,9 +6,23 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig: NextConfig = {
   /* config options here */
   webpack(config) {
+    const fileLoaderRule = config.module.rules.find(
+      (rule: { test?: unknown }) =>
+        rule.test instanceof RegExp && rule.test.test(".svg"),
+    ) as { exclude?: unknown; issuer?: unknown; resourceQuery?: { not?: unknown[] } } | undefined;
+
+    if (fileLoaderRule) {
+      fileLoaderRule.exclude = /\.svg$/i;
+    }
+
     config.module.rules.push({
-      test: /\.svg$/,
-      use: ["@svgr/webpack"],
+      test: /\.svg$/i,
+      use: [
+        {
+          loader: "@svgr/webpack",
+          options: { exportType: "default" },
+        },
+      ],
     });
     return config;
   },
@@ -22,14 +36,23 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "ui-avatars.com",
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+      },
     ],
   },
   turbopack: {
     root: __dirname,
     rules: {
       "*.svg": {
-        loaders: ["@svgr/webpack"],
+        loaders: [
+          {
+            loader: "@svgr/webpack",
+            options: { exportType: "default" },
+          },
+        ],
         as: "*.js",
       },
     },

@@ -1,0 +1,2 @@
+-- Baseline for pre-existing Supabase tables outside this application.
+-- The application schema is created by the next migration.

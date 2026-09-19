@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, Link } from "@/i18n/navigation";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
@@ -75,9 +75,9 @@ export default function SignIn() {
 
       <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
         Belum punya akun?{" "}
-        <a href="/signup" className="text-brand-500 hover:underline">
+        <Link href="/signup" className="text-brand-500 hover:underline">
           Daftar sekarang
-        </a>
+        </Link>
       </p>
     </div>
   );

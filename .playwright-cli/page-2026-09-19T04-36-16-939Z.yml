@@ -1,0 +1,25 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e94]:
+    - generic [ref=e96]:
+      - generic [ref=e98]: "1"
+      - generic [ref=e99]: "2"
+      - generic [ref=e100]: "3"
+      - generic [ref=e101]: "4"
+      - generic [ref=e102]: "5"
+      - generic [ref=e103]: "6"
+    - generic [ref=e155]:
+      - generic [ref=e156]:
+        - heading "Skala Acara & Lokasi" [level=2] [ref=e157]
+        - paragraph [ref=e158]: Untuk membantu alokasi budget venue dan catering.
+      - generic [ref=e159]:
+        - generic [ref=e160]:
+          - generic [ref=e161]: Estimasi Jumlah Tamu (Orang)
+          - 'spinbutton "Contoh: 500" [ref=e163]'
+        - generic [ref=e164]:
+          - generic [ref=e165]: Kota Penyelenggaraan
+          - 'textbox "Contoh: Jakarta Selatan" [ref=e167]'
+      - generic [ref=e168]:
+        - button "Kembali" [ref=e169] [cursor=pointer]
+        - button "Lanjut" [disabled] [ref=e170]
+  - button "Open Next.js Dev Tools" [ref=e47] [cursor=pointer]
+  - alert [ref=e71]: Selamat Datang di Nol ke Nikah

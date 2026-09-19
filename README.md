@@ -74,6 +74,36 @@ git clone https://github.com/TailAdmin/free-nextjs-admin-dashboard.git
    yarn dev
    ```
 
+### Database Setup
+
+This project uses PostgreSQL through Prisma and is configured for Supabase.
+Copy `.env.example` to `.env`, replace `[YOUR-PASSWORD]`, and set the same
+values in Vercel environment variables.
+
+Use the pooled transaction-mode URL for `DATABASE_URL` and the direct/session-
+mode URL for `DIRECT_URL`. The direct URL is required when Prisma runs
+migrations.
+
+For a new or already-baselined database, apply migrations with:
+
+```bash
+npx prisma migrate deploy
+```
+
+If an existing database was created outside Prisma Migrate, inspect it first
+and baseline only the migration that exactly matches its schema. Do not use
+`prisma migrate reset` against a database containing real data.
+
+### Validation
+
+Run the checks before opening a pull request:
+
+```bash
+npm run lint
+npm test
+npm run build
+```
+
 ## Components
 
 TailAdmin is a pre-designed starting point for building a web-based dashboard using Next.js and Tailwind CSS. The template includes:

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import OnboardingWizard from "@/components/onboarding/OnboardingWizard";
 import Button from "@/components/ui/button/Button";
 import Input from "@/components/form/input/InputField";
@@ -10,7 +10,7 @@ import { joinWedding } from "@/actions/wedding";
 export default function OnboardingPage() {
   const router = useRouter();
   const [mode, setMode] = useState<"choose" | "new" | "join">("choose");
-  const [partnerEmail, setPartnerEmail] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,16 +20,16 @@ export default function OnboardingPage() {
     setError("");
 
     try {
-      const res = await joinWedding(partnerEmail);
+      const res = await joinWedding(inviteCode);
       if (res.error) {
         setError(res.error);
         setLoading(false);
       } else {
         // Force reload to fetch the new wedding context
-        window.location.href = "/";
+        router.push("/");
       }
-    } catch (err) {
-      setError("Gagal bergabung. Pastikan email benar.");
+    } catch {
+      setError("Gagal bergabung. Pastikan kode undangan benar.");
       setLoading(false);
     }
   };
@@ -49,16 +49,16 @@ export default function OnboardingPage() {
       <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4 sm:p-8 dark:bg-gray-900">
         <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm dark:bg-gray-800">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Gabung dengan Pasangan</h2>
-          <p className="text-sm text-gray-500 mb-6">Masukkan email pasangan Anda yang sudah mendaftar dan membuat jadwal pernikahan.</p>
+          <p className="text-sm text-gray-500 mb-6">Masukkan kode undangan yang dibagikan pasangan Anda.</p>
           
           {error && <div className="mb-4 rounded-lg bg-error-50 p-3 text-sm text-error-500">{error}</div>}
 
           <form onSubmit={handleJoin} className="space-y-4">
             <Input 
-              type="email" 
-              placeholder="Email Pasangan" 
-              value={partnerEmail}
-              onChange={(e) => setPartnerEmail(e.target.value)}
+              type="text"
+              placeholder="Kode Undangan"
+              value={inviteCode}
+              onChange={(e) => setInviteCode(e.target.value)}
               required
             />
             <div className="flex gap-3">

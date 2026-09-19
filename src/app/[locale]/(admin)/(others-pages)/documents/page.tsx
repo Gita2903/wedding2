@@ -1,23 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useWedding } from "@/context/WeddingContext";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import DocumentChecklist from "@/components/documents/DocumentChecklist";
 
 export default function DocumentsPage() {
   const { data } = useWedding();
-  const [checkedDocs, setCheckedDocs] = useState<string[]>([]);
-  const isIslam = data.religion === "islam";
-
-  // Load from local storage directly for this specific component to keep it simple,
-  // or we could add it to WeddingContext, but let's just use local component state synced to localStorage for now.
-  useEffect(() => {
+  const [checkedDocs, setCheckedDocs] = useState<string[]>(() => {
+    if (typeof window === "undefined") return [];
     const saved = localStorage.getItem("wedding_docs_checked");
-    if (saved) {
-      setCheckedDocs(JSON.parse(saved));
+    if (!saved) return [];
+    try {
+      const parsed: unknown = JSON.parse(saved);
+      return Array.isArray(parsed) && parsed.every((item) => typeof item === "string")
+        ? parsed
+        : [];
+    } catch {
+      return [];
     }
-  }, []);
+  });
+  const isIslam = data.religion === "islam";
 
   const handleToggle = (id: string) => {
     const newChecked = checkedDocs.includes(id)
@@ -28,7 +31,7 @@ export default function DocumentsPage() {
     localStorage.setItem("wedding_docs_checked", JSON.stringify(newChecked));
   };
 
-  const allDocuments = [
+  const allDocuments: Omit<React.ComponentProps<typeof DocumentChecklist>["documents"][number], "checked">[] = [
     // General
     { id: "fc_ktp", title: "Fotokopi KTP CPW & CPP", description: "Masing-masing 4 lembar (tergantung daerah).", requiredFor: "Semua" },
     { id: "fc_kk", title: "Fotokopi KK CPW & CPP", description: "Masing-masing 4 lembar.", requiredFor: "Semua" },
@@ -56,7 +59,7 @@ export default function DocumentsPage() {
   ).map(doc => ({
     ...doc,
     checked: checkedDocs.includes(doc.id)
-  }) as any);
+  }));
 
   const completedCount = filteredDocs.filter(d => d.checked).length;
   const progressPercent = Math.round((completedCount / filteredDocs.length) * 100);

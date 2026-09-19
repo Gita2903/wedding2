@@ -4,57 +4,95 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export async function saveWeddingData(data: any) {
+type SessionUser = { id: string };
+type TaskInput = { title: string; phase: string; dueDate: string; status: string };
+type VendorInput = {
+  name: string;
+  category: string;
+  contact?: string;
+  priceQuote?: number;
+  status: string;
+  notes?: string;
+};
+type WeddingSaveInput = {
+  groomName?: string;
+  brideName?: string;
+  weddingDate?: string | null;
+  estimatedBudget?: number;
+  estimatedGuests?: number;
+  city?: string;
+  religion?: string;
+  tasks?: TaskInput[];
+  vendors?: VendorInput[];
+};
+
+/**
+ * The JWT token's weddingId is set at login time. When a user completes
+ * onboarding and a wedding is created, the token is stale (still null)
+ * until the session is refreshed. To avoid "Belum punya data pernikahan"
+ * errors during that window, we fall back to a DB lookup.
+ */
+async function getWeddingIdForUser(userId: string): Promise<string | null> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { weddingId: true },
+  });
+  return user?.weddingId ?? null;
+}
+
+export async function saveWeddingData(data: WeddingSaveInput) {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     throw new Error("Unauthorized");
   }
 
-  const userId = (session.user as any).id;
-  const weddingId = (session.user as any).weddingId;
+  const userId = (session.user as SessionUser).id;
+  const weddingId = await getWeddingIdForUser(userId);
 
   if (weddingId) {
     // Update existing wedding
-    await prisma.wedding.update({
-      where: { id: weddingId },
-      data: {
-        groomName: data.groomName || "",
-        brideName: data.brideName || "",
-        weddingDate: data.weddingDate ? new Date(data.weddingDate) : null,
-        estimatedBudget: data.estimatedBudget || 0,
-        estimatedGuests: data.estimatedGuests || 0,
-        city: data.city || "",
-        religion: data.religion || "",
+    await prisma.$transaction(async (tx) => {
+      await tx.wedding.update({
+        where: { id: weddingId },
+        data: {
+          groomName: data.groomName || "",
+          brideName: data.brideName || "",
+          weddingDate: data.weddingDate ? new Date(data.weddingDate) : null,
+          estimatedBudget: data.estimatedBudget || 0,
+          estimatedGuests: data.estimatedGuests || 0,
+          city: data.city || "",
+          religion: data.religion || "",
+        }
+      });
+
+      if (data.tasks) {
+        await tx.task.deleteMany({ where: { weddingId } });
+        await tx.task.createMany({
+          data: data.tasks.map((t) => ({
+            title: t.title,
+            phase: t.phase,
+            dueDate: new Date(t.dueDate),
+            status: t.status,
+            weddingId
+          }))
+        });
+      }
+
+      if (data.vendors) {
+        await tx.vendor.deleteMany({ where: { weddingId } });
+        await tx.vendor.createMany({
+          data: data.vendors.map((v) => ({
+            name: v.name,
+            category: v.category,
+            contact: v.contact || "",
+            priceQuote: v.priceQuote || 0,
+            status: v.status,
+            notes: v.notes || "",
+            weddingId
+          }))
+        });
       }
     });
-
-    if (data.tasks) {
-      await prisma.task.deleteMany({ where: { weddingId } });
-      await prisma.task.createMany({
-        data: data.tasks.map((t: any) => ({
-          title: t.title,
-          phase: t.phase,
-          dueDate: new Date(t.dueDate),
-          status: t.status,
-          weddingId
-        }))
-      });
-    }
-
-    if (data.vendors) {
-      await prisma.vendor.deleteMany({ where: { weddingId } });
-      await prisma.vendor.createMany({
-        data: data.vendors.map((v: any) => ({
-          name: v.name,
-          category: v.category,
-          contact: v.contact || "",
-          priceQuote: v.priceQuote || 0,
-          status: v.status,
-          notes: v.notes || "",
-          weddingId
-        }))
-      });
-    }
 
     return { success: true, weddingId };
   } else {
@@ -76,7 +114,7 @@ export async function saveWeddingData(data: any) {
 
     if (data.tasks) {
       await prisma.task.createMany({
-        data: data.tasks.map((t: any) => ({
+        data: data.tasks.map((t) => ({
           title: t.title,
           phase: t.phase,
           dueDate: new Date(t.dueDate),
@@ -88,7 +126,7 @@ export async function saveWeddingData(data: any) {
 
     if (data.vendors) {
       await prisma.vendor.createMany({
-        data: data.vendors.map((v: any) => ({
+        data: data.vendors.map((v) => ({
           name: v.name,
           category: v.category,
           contact: v.contact || "",
@@ -121,8 +159,8 @@ export async function updateWeddingBasicInfo(data: {
     throw new Error("Unauthorized");
   }
 
-  const userId = (session.user as any).id;
-  const weddingId = (session.user as any).weddingId;
+  const userId = (session.user as SessionUser).id;
+  const weddingId = await getWeddingIdForUser(userId);
 
   const basicFields = {
     groomName: data.groomName?.trim() || "",
@@ -165,8 +203,8 @@ export async function updateTaskStatus(taskId: string, status: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error("Unauthorized");
 
-  const userId = (session.user as any).id;
-  const weddingId = (session.user as any).weddingId;
+  const userId = (session.user as SessionUser).id;
+  const weddingId = await getWeddingIdForUser(userId);
   if (!weddingId) throw new Error("Belum punya data pernikahan.");
 
   const task = await prisma.task.findUnique({ where: { id: taskId } });
@@ -192,8 +230,8 @@ export async function addTask(task: {
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error("Unauthorized");
 
-  const userId = (session.user as any).id;
-  const weddingId = (session.user as any).weddingId;
+  const userId = (session.user as SessionUser).id;
+  const weddingId = await getWeddingIdForUser(userId);
   if (!weddingId) throw new Error("Belum punya data pernikahan.");
 
   const created = await prisma.task.create({
@@ -220,8 +258,8 @@ export async function regenerateTasks(
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error("Unauthorized");
 
-  const userId = (session.user as any).id;
-  const weddingId = (session.user as any).weddingId;
+  const userId = (session.user as SessionUser).id;
+  const weddingId = await getWeddingIdForUser(userId);
   if (!weddingId) throw new Error("Belum punya data pernikahan.");
 
   await prisma.task.deleteMany({ where: { weddingId } });
@@ -239,23 +277,38 @@ export async function regenerateTasks(
   return { success: true };
 }
 
-export async function joinWedding(emailToJoin: string) {
+export async function joinWedding(inviteCode: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error("Unauthorized");
   
-  const userId = (session.user as any).id;
+  const userId = (session.user as SessionUser).id;
+  const normalizedInviteCode = typeof inviteCode === "string" ? inviteCode.trim() : "";
 
-  const partner = await prisma.user.findUnique({
-    where: { email: emailToJoin }
+  if (!normalizedInviteCode) {
+    return { error: "Kode undangan wajib diisi." };
+  }
+
+  const currentUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { weddingId: true },
   });
 
-  if (!partner || !partner.weddingId) {
-    return { error: "Pasangan tidak ditemukan atau belum membuat data pernikahan." };
+  if (currentUser?.weddingId) {
+    return { error: "Akun Anda sudah terhubung ke data pernikahan." };
+  }
+
+  const wedding = await prisma.wedding.findUnique({
+    where: { inviteCode: normalizedInviteCode },
+    select: { id: true },
+  });
+
+  if (!wedding) {
+    return { error: "Kode undangan tidak valid." };
   }
 
   await prisma.user.update({
     where: { id: userId },
-    data: { weddingId: partner.weddingId }
+    data: { weddingId: wedding.id }
   });
 
   return { success: true };
@@ -267,7 +320,7 @@ export async function getWeddingData() {
     return null;
   }
 
-  const userId = (session.user as any).id;
+  const userId = (session.user as SessionUser).id;
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: {

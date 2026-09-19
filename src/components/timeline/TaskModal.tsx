@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import Input from "@/components/form/input/InputField";

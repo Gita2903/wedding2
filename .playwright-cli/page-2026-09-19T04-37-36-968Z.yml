@@ -1,0 +1,428 @@
+- generic [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e47] [cursor=pointer]
+  - alert [ref=e71]: Nol ke Nikah
+  - generic [ref=e223]:
+    - complementary [ref=e224]:
+      - link [ref=e226] [cursor=pointer]:
+        - /url: /
+        - heading "Nol ke Nikah" [level=1] [ref=e227]
+      - generic [ref=e228]:
+        - navigation [ref=e229]:
+          - generic [ref=e230]:
+            - generic [ref=e231]:
+              - heading "Main Menu" [level=2] [ref=e232]
+              - list [ref=e233]:
+                - listitem [ref=e234]:
+                  - link "Dashboard" [ref=e235] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=e240]:
+                  - link "Timeline" [active] [ref=e241] [cursor=pointer]:
+                    - /url: /timeline
+                - listitem [ref=e246]:
+                  - link "Vendors" [ref=e247] [cursor=pointer]:
+                    - /url: /vendors
+                - listitem [ref=e252]:
+                  - link "Budget" [ref=e253] [cursor=pointer]:
+                    - /url: /budget
+                - listitem [ref=e258]:
+                  - link "Documents" [ref=e259] [cursor=pointer]:
+                    - /url: /documents
+            - generic [ref=e264]:
+              - heading "Others" [level=2] [ref=e265]
+              - list [ref=e266]:
+                - listitem [ref=e267]:
+                  - link "Profile" [ref=e268] [cursor=pointer]:
+                    - /url: /profile
+        - generic [ref=e274]:
+          - heading "Butuh Bantuan?" [level=3] [ref=e275]
+          - paragraph [ref=e276]: Konsultasikan persiapan pernikahanmu dengan tim ahli kami.
+          - link "Hubungi Planner" [ref=e277] [cursor=pointer]:
+            - /url: "#"
+    - generic [ref=e278]:
+      - banner [ref=e279]:
+        - generic [ref=e280]:
+          - generic [ref=e281]:
+            - button "Toggle Sidebar" [ref=e282] [cursor=pointer]
+            - generic [ref=e287]:
+              - textbox "Search anything..." [ref=e288]
+              - button "⌘ K" [ref=e289] [cursor=pointer]:
+                - generic [ref=e290]: ⌘
+                - generic [ref=e291]: K
+          - generic [ref=e292]:
+            - generic [ref=e293]:
+              - button [ref=e294] [cursor=pointer]
+              - button [ref=e298] [cursor=pointer]
+            - button "User Budi Santoso" [ref=e304] [cursor=pointer]:
+              - img "User" [ref=e306]
+              - generic [ref=e307]: Budi Santoso
+      - generic [ref=e310]:
+        - generic [ref=e455]:
+          - heading "Timeline & Roadmap" [level=2] [ref=e456]
+          - navigation [ref=e457]:
+            - list [ref=e458]:
+              - listitem [ref=e459]:
+                - link "Home" [ref=e460] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=e463]: Timeline & Roadmap
+        - generic [ref=e464]:
+          - generic [ref=e465]:
+            - heading "Roadmap Persiapan" [level=2] [ref=e466]
+            - paragraph [ref=e467]: Ikuti panduan ini langkah demi langkah agar persiapanmu terarah.
+          - generic [ref=e468]:
+            - button "Regenerate" [ref=e469] [cursor=pointer]
+            - button "+ Tambah Tugas" [ref=e470] [cursor=pointer]
+        - generic [ref=e471]:
+          - generic [ref=e472]:
+            - button "12+ Bulan Sebelum 0 / 5 Selesai" [ref=e473] [cursor=pointer]:
+              - generic [ref=e474]:
+                - heading "12+ Bulan Sebelum" [level=3] [ref=e475]
+                - generic [ref=e476]: 0 / 5 Selesai
+            - generic [ref=e483]:
+              - generic [ref=e484]:
+                - generic [ref=e485]:
+                  - heading "Tentukan estimasi budget awal" [level=4] [ref=e486]
+                  - generic [ref=e487]:
+                    - generic [ref=e488]: 20 Sep 2026
+                    - generic [ref=e491]: · Diedit oleh Budi Santoso
+                - generic [ref=e492]:
+                  - generic [ref=e493]: Belum Mulai
+                  - combobox [ref=e494]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e495]:
+                - generic [ref=e496]:
+                  - heading "Buat list tamu bayangan (draft 1)" [level=4] [ref=e497]
+                  - generic [ref=e498]:
+                    - generic [ref=e499]: 20 Sep 2026
+                    - generic [ref=e502]: · Diedit oleh Budi Santoso
+                - generic [ref=e503]:
+                  - generic [ref=e504]: Belum Mulai
+                  - combobox [ref=e505]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e506]:
+                - generic [ref=e507]:
+                  - heading "Tentukan konsep & tema pernikahan" [level=4] [ref=e508]
+                  - generic [ref=e509]:
+                    - generic [ref=e510]: 20 Sep 2026
+                    - generic [ref=e513]: · Diedit oleh Budi Santoso
+                - generic [ref=e514]:
+                  - generic [ref=e515]: Belum Mulai
+                  - combobox [ref=e516]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e517]:
+                - generic [ref=e518]:
+                  - heading "Mulai riset venue" [level=4] [ref=e519]
+                  - generic [ref=e520]:
+                    - generic [ref=e521]: 20 Sep 2026
+                    - generic [ref=e524]: · Diedit oleh Budi Santoso
+                - generic [ref=e525]:
+                  - generic [ref=e526]: Belum Mulai
+                  - combobox [ref=e527]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e528]:
+                - generic [ref=e529]:
+                  - heading "Mulai riset Wedding Organizer (opsional)" [level=4] [ref=e530]
+                  - generic [ref=e531]:
+                    - generic [ref=e532]: 20 Sep 2026
+                    - generic [ref=e535]: · Diedit oleh Budi Santoso
+                - generic [ref=e536]:
+                  - generic [ref=e537]: Belum Mulai
+                  - combobox [ref=e538]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+          - generic [ref=e539]:
+            - button "6-12 Bulan Sebelum 0 / 5 Selesai" [ref=e540] [cursor=pointer]:
+              - generic [ref=e541]:
+                - heading "6-12 Bulan Sebelum" [level=3] [ref=e542]
+                - generic [ref=e543]: 0 / 5 Selesai
+            - generic [ref=e549]:
+              - generic [ref=e550]:
+                - generic [ref=e551]:
+                  - heading "Pilih & booking Catering" [level=4] [ref=e552]
+                  - generic [ref=e553]:
+                    - generic [ref=e554]: 20 Des 2026
+                    - generic [ref=e557]: · Diedit oleh Budi Santoso
+                - generic [ref=e558]:
+                  - generic [ref=e559]: Belum Mulai
+                  - combobox [ref=e560]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e561]:
+                - generic [ref=e562]:
+                  - heading "Pilih & booking Fotografer/Videografer" [level=4] [ref=e563]
+                  - generic [ref=e564]:
+                    - generic [ref=e565]: 20 Des 2026
+                    - generic [ref=e568]: · Diedit oleh Budi Santoso
+                - generic [ref=e569]:
+                  - generic [ref=e570]: Belum Mulai
+                  - combobox [ref=e571]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e572]:
+                - generic [ref=e573]:
+                  - heading "Booking Venue & bayar DP" [level=4] [ref=e574]
+                  - generic [ref=e575]:
+                    - generic [ref=e576]: 20 Des 2026
+                    - generic [ref=e579]: · Diedit oleh Budi Santoso
+                - generic [ref=e580]:
+                  - generic [ref=e581]: Belum Mulai
+                  - combobox [ref=e582]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e583]:
+                - generic [ref=e584]:
+                  - heading "Pesan Cincin Kawin" [level=4] [ref=e585]
+                  - generic [ref=e586]:
+                    - generic [ref=e587]: 20 Des 2026
+                    - generic [ref=e590]: · Diedit oleh Budi Santoso
+                - generic [ref=e591]:
+                  - generic [ref=e592]: Belum Mulai
+                  - combobox [ref=e593]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e594]:
+                - generic [ref=e595]:
+                  - heading "Booking MUA & Attire" [level=4] [ref=e596]
+                  - generic [ref=e597]:
+                    - generic [ref=e598]: 20 Des 2026
+                    - generic [ref=e601]: · Diedit oleh Budi Santoso
+                - generic [ref=e602]:
+                  - generic [ref=e603]: Belum Mulai
+                  - combobox [ref=e604]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+          - generic [ref=e605]:
+            - button "3-6 Bulan Sebelum 0 / 8 Selesai" [ref=e606] [cursor=pointer]:
+              - generic [ref=e607]:
+                - heading "3-6 Bulan Sebelum" [level=3] [ref=e608]
+                - generic [ref=e609]: 0 / 8 Selesai
+            - generic [ref=e615]:
+              - generic [ref=e616]:
+                - generic [ref=e617]:
+                  - heading "Urus Surat N1-N4 di Kelurahan" [level=4] [ref=e618]
+                  - generic [ref=e619]:
+                    - generic [ref=e620]: 20 Mar 2027
+                    - generic [ref=e623]: · Diedit oleh Budi Santoso
+                - generic [ref=e624]:
+                  - generic [ref=e625]: Belum Mulai
+                  - combobox [ref=e626]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e627]:
+                - generic [ref=e628]:
+                  - heading "Urus Dokumen Legal (KUA / Catatan Sipil)" [level=4] [ref=e629]
+                  - generic [ref=e630]:
+                    - generic [ref=e631]: 20 Mar 2027
+                    - generic [ref=e634]: · Diedit oleh Budi Santoso
+                - generic [ref=e635]:
+                  - generic [ref=e636]: Belum Mulai
+                  - combobox [ref=e637]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e638]:
+                - generic [ref=e639]:
+                  - heading "Finalisasi list tamu" [level=4] [ref=e640]
+                  - generic [ref=e641]:
+                    - generic [ref=e642]: 20 Mar 2027
+                    - generic [ref=e645]: · Diedit oleh Budi Santoso
+                - generic [ref=e646]:
+                  - generic [ref=e647]: Belum Mulai
+                  - combobox [ref=e648]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e649]:
+                - generic [ref=e650]:
+                  - heading "Daftar Nikah di KUA" [level=4] [ref=e651]
+                  - generic [ref=e652]:
+                    - generic [ref=e653]: 20 Mar 2027
+                    - generic [ref=e656]: · Diedit oleh Budi Santoso
+                - generic [ref=e657]:
+                  - generic [ref=e658]: Belum Mulai
+                  - combobox [ref=e659]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e660]:
+                - generic [ref=e661]:
+                  - heading "Pesan Souvenir" [level=4] [ref=e662]
+                  - generic [ref=e663]:
+                    - generic [ref=e664]: 20 Mar 2027
+                    - generic [ref=e667]: · Diedit oleh Budi Santoso
+                - generic [ref=e668]:
+                  - generic [ref=e669]: Belum Mulai
+                  - combobox [ref=e670]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e671]:
+                - generic [ref=e672]:
+                  - heading "Pesan Seragam Keluarga/Bridesmaid" [level=4] [ref=e673]
+                  - generic [ref=e674]:
+                    - generic [ref=e675]: 20 Mar 2027
+                    - generic [ref=e678]: · Diedit oleh Budi Santoso
+                - generic [ref=e679]:
+                  - generic [ref=e680]: Belum Mulai
+                  - combobox [ref=e681]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e682]:
+                - generic [ref=e683]:
+                  - heading "Booking Entertainment/MC" [level=4] [ref=e684]
+                  - generic [ref=e685]:
+                    - generic [ref=e686]: 20 Mar 2027
+                    - generic [ref=e689]: · Diedit oleh Budi Santoso
+                - generic [ref=e690]:
+                  - generic [ref=e691]: Belum Mulai
+                  - combobox [ref=e692]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e693]:
+                - generic [ref=e694]:
+                  - heading "Desain & cetak Undangan" [level=4] [ref=e695]
+                  - generic [ref=e696]:
+                    - generic [ref=e697]: 20 Mar 2027
+                    - generic [ref=e700]: · Diedit oleh Budi Santoso
+                - generic [ref=e701]:
+                  - generic [ref=e702]: Belum Mulai
+                  - combobox [ref=e703]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+          - generic [ref=e704]:
+            - button "1-3 Bulan Sebelum 0 / 5 Selesai" [ref=e705] [cursor=pointer]:
+              - generic [ref=e706]:
+                - heading "1-3 Bulan Sebelum" [level=3] [ref=e707]
+                - generic [ref=e708]: 0 / 5 Selesai
+            - generic [ref=e714]:
+              - generic [ref=e715]:
+                - generic [ref=e716]:
+                  - heading "Test food Catering" [level=4] [ref=e717]
+                  - generic [ref=e718]:
+                    - generic [ref=e719]: 20 Mei 2027
+                    - generic [ref=e722]: · Diedit oleh Budi Santoso
+                - generic [ref=e723]:
+                  - generic [ref=e724]: Belum Mulai
+                  - combobox [ref=e725]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e726]:
+                - generic [ref=e727]:
+                  - heading "Technical Meeting dengan semua vendor" [level=4] [ref=e728]
+                  - generic [ref=e729]:
+                    - generic [ref=e730]: 20 Mei 2027
+                    - generic [ref=e733]: · Diedit oleh Budi Santoso
+                - generic [ref=e734]:
+                  - generic [ref=e735]: Belum Mulai
+                  - combobox [ref=e736]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e737]:
+                - generic [ref=e738]:
+                  - heading "Beli Seserahan/Mahar" [level=4] [ref=e739]
+                  - generic [ref=e740]:
+                    - generic [ref=e741]: 20 Mei 2027
+                    - generic [ref=e744]: · Diedit oleh Budi Santoso
+                - generic [ref=e745]:
+                  - generic [ref=e746]: Belum Mulai
+                  - combobox [ref=e747]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e748]:
+                - generic [ref=e749]:
+                  - heading "Fitting baju final" [level=4] [ref=e750]
+                  - generic [ref=e751]:
+                    - generic [ref=e752]: 20 Mei 2027
+                    - generic [ref=e755]: · Diedit oleh Budi Santoso
+                - generic [ref=e756]:
+                  - generic [ref=e757]: Belum Mulai
+                  - combobox [ref=e758]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e759]:
+                - generic [ref=e760]:
+                  - heading "Sebar Undangan" [level=4] [ref=e761]
+                  - generic [ref=e762]:
+                    - generic [ref=e763]: 20 Mei 2027
+                    - generic [ref=e766]: · Diedit oleh Budi Santoso
+                - generic [ref=e767]:
+                  - generic [ref=e768]: Belum Mulai
+                  - combobox [ref=e769]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+          - generic [ref=e770]:
+            - button "H-1 Minggu 0 / 4 Selesai" [ref=e771] [cursor=pointer]:
+              - generic [ref=e772]:
+                - heading "H-1 Minggu" [level=3] [ref=e773]
+                - generic [ref=e774]: 0 / 4 Selesai
+            - generic [ref=e780]:
+              - generic [ref=e781]:
+                - generic [ref=e782]:
+                  - heading "Gladi Resik" [level=4] [ref=e783]
+                  - generic [ref=e784]:
+                    - generic [ref=e785]: 20 Jun 2027
+                    - generic [ref=e788]: · Diedit oleh Budi Santoso
+                - generic [ref=e789]:
+                  - generic [ref=e790]: Belum Mulai
+                  - combobox [ref=e791]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e792]:
+                - generic [ref=e793]:
+                  - heading "Pelunasan semua vendor" [level=4] [ref=e794]
+                  - generic [ref=e795]:
+                    - generic [ref=e796]: 20 Jun 2027
+                    - generic [ref=e799]: · Diedit oleh Budi Santoso
+                - generic [ref=e800]:
+                  - generic [ref=e801]: Belum Mulai
+                  - combobox [ref=e802]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e803]:
+                - generic [ref=e804]:
+                  - heading "Istirahat yang cukup & perawatan tubuh" [level=4] [ref=e805]
+                  - generic [ref=e806]:
+                    - generic [ref=e807]: 20 Jun 2027
+                    - generic [ref=e810]: · Diedit oleh Budi Santoso
+                - generic [ref=e811]:
+                  - generic [ref=e812]: Belum Mulai
+                  - combobox [ref=e813]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"
+              - generic [ref=e814]:
+                - generic [ref=e815]:
+                  - heading "Packing barang untuk hari H" [level=4] [ref=e816]
+                  - generic [ref=e817]:
+                    - generic [ref=e818]: 20 Jun 2027
+                    - generic [ref=e821]: · Diedit oleh Budi Santoso
+                - generic [ref=e822]:
+                  - generic [ref=e823]: Belum Mulai
+                  - combobox [ref=e824]:
+                    - option "Belum Mulai" [selected]
+                    - option "Sedang Proses"
+                    - option "Selesai"

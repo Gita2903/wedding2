@@ -4,13 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
+type SessionUser = { id: string };
+
 export async function getProfile() {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     throw new Error("Unauthorized");
   }
 
-  const userId = (session.user as any).id;
+  const userId = (session.user as SessionUser).id;
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { id: true, name: true, email: true },
@@ -29,7 +31,7 @@ export async function updateUserProfile(data: { name: string; email: string }) {
     throw new Error("Unauthorized");
   }
 
-  const userId = (session.user as any).id;
+  const userId = (session.user as SessionUser).id;
   const name = data.name?.trim();
   const email = data.email?.trim();
 

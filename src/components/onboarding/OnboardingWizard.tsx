@@ -45,9 +45,10 @@ export default function OnboardingWizard() {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
-  const finishWizard = () => {
-    updateData({ ...wizardData, onboardingComplete: true });
-    // Note: Timeline generation would happen here
+  const finishWizard = async () => {
+    // Await the full save + session refresh so the JWT has the
+    // weddingId before the timeline page tries to auto-generate tasks.
+    await updateData({ ...wizardData, onboardingComplete: true });
     router.push("/");
   };
 

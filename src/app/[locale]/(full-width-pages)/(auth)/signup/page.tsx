@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, Link } from "@/i18n/navigation";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
@@ -49,7 +49,7 @@ export default function SignUp() {
         router.push("/onboarding");
         router.refresh();
       }
-    } catch (err) {
+    } catch {
       setError("Terjadi kesalahan sistem");
       setLoading(false);
     }
@@ -93,11 +93,11 @@ export default function SignUp() {
           <Label>Password</Label>
           <Input 
             type="password" 
-            placeholder="Minimal 6 karakter" 
+            placeholder="Minimal 8 karakter"
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
             required 
-            minLength={6}
+            minLength={8}
           />
         </div>
         <Button className="w-full" type="submit" disabled={loading}>
@@ -107,9 +107,9 @@ export default function SignUp() {
 
       <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
         Sudah punya akun?{" "}
-        <a href="/signin" className="text-brand-500 hover:underline">
+        <Link href="/signin" className="text-brand-500 hover:underline">
           Masuk di sini
-        </a>
+        </Link>
       </p>
     </div>
   );

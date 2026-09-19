@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
+import { useSession } from "next-auth/react";
 import {
   getWeddingData,
   saveWeddingData,
@@ -60,6 +61,8 @@ export interface DocumentItem {
 
 export interface WeddingData {
   // Onboarding
+  id: string;
+  inviteCode: string;
   groomName: string;
   brideName: string;
   weddingDate: string | null;
@@ -78,8 +81,14 @@ export interface WeddingData {
   documents: DocumentItem[];
 }
 
+export type OnboardingFormData = Pick<WeddingData,
+  "groomName" | "brideName" | "weddingDate" | "estimatedBudget" | "estimatedGuests" | "city" | "religion" | "customs"
+>;
+
 // --- Default State ---
 const defaultData: WeddingData = {
+  id: "",
+  inviteCode: "",
   groomName: "",
   brideName: "",
   weddingDate: null,
@@ -97,7 +106,16 @@ const defaultData: WeddingData = {
 };
 
 // Normalizers buat ngilangin type mismatch dari Prisma
-function normalizeTasks(rawTasks: any[] | undefined): Task[] {
+type RawTask = {
+  id: string;
+  title: string;
+  phase: string;
+  dueDate: Date | string;
+  status: string;
+  lastEditedBy?: { name: string } | null;
+};
+
+function normalizeTasks(rawTasks: RawTask[] | undefined): Task[] {
   if (!rawTasks) return [];
   return rawTasks.map((t) => ({
     id: t.id,
@@ -109,7 +127,12 @@ function normalizeTasks(rawTasks: any[] | undefined): Task[] {
   }));
 }
 
-function normalizeVendors(rawVendors: any[] | undefined): Vendor[] {
+type RawVendor = Omit<Vendor, "category" | "status"> & {
+  category: string;
+  status: string;
+};
+
+function normalizeVendors(rawVendors: RawVendor[] | undefined): Vendor[] {
   if (!rawVendors) return [];
   return rawVendors.map((v) => ({
     id: v.id,
@@ -144,6 +167,7 @@ interface WeddingContextType {
 const WeddingContext = createContext<WeddingContextType | undefined>(undefined);
 
 export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { update: updateSession } = useSession();
   const [data, setData] = useState<WeddingData>(defaultData);
   const [isLoaded, setIsLoaded] = useState(false);
   const dataRef = useRef(data);
@@ -157,8 +181,8 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
           ...prev,
           ...fresh,
           religion: (fresh.religion as Religion | "") ?? "",
-          tasks: normalizeTasks((fresh as any).tasks),
-          vendors: normalizeVendors((fresh as any).vendors),
+          tasks: normalizeTasks(fresh.tasks),
+          vendors: normalizeVendors(fresh.vendors),
           weddingDate: fresh.weddingDate ? new Date(fresh.weddingDate).toISOString() : null,
           onboardingComplete: true,
         }));
@@ -178,8 +202,8 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
             ...prev,
             ...dbData,
             religion: (dbData.religion as Religion | "") ?? "",
-            tasks: normalizeTasks((dbData as any).tasks),
-            vendors: normalizeVendors((dbData as any).vendors),
+            tasks: normalizeTasks(dbData.tasks),
+            vendors: normalizeVendors(dbData.vendors),
             weddingDate: dbData.weddingDate ? new Date(dbData.weddingDate).toISOString() : null,
             onboardingComplete: true,
           }));
@@ -230,12 +254,21 @@ export const WeddingProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     if (updated.onboardingComplete) {
       try {
-        await saveWeddingData(updated);
+        const result = await saveWeddingData(updated);
+        // If a new wedding was just created (or an existing one updated),
+        // refresh the next-auth session so the JWT picks up the latest
+        // weddingId. Without this, server actions that check
+        // session.user.weddingId will still see null and throw
+        // "Belum punya data pernikahan."
+        if (result?.weddingId) {
+          await updateSession({ weddingId: result.weddingId });
+          await refreshFromServer();
+        }
       } catch (e) {
         console.error("Failed to save to DB", e);
       }
     }
-  }, []);
+  }, [updateSession, refreshFromServer]);
 
   const updateBasicInfo = useCallback(
     async (fields: {

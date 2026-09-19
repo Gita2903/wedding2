@@ -38,6 +38,8 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   const pathname = usePathname();
   // Close sidebar on route change (for mobile)
   useEffect(() => {
+    // Route changes are an external event that resets transient UI state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobileOpen(false);
   }, [pathname]);
 

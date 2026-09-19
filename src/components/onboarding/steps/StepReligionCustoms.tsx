@@ -1,11 +1,13 @@
+"use client";
+
 import React from "react";
+import { OnboardingFormData, Religion } from "@/context/WeddingContext";
 import Label from "../../form/Label";
-import Select from "../../form/Select";
 import Button from "../../ui/button/Button";
 
 interface StepProps {
-  data: any;
-  updateData: (data: any) => void;
+  data: OnboardingFormData;
+  updateData: (data: Partial<OnboardingFormData>) => void;
   nextStep: () => void;
   prevStep: () => void;
 }
@@ -49,7 +51,7 @@ export default function StepReligionCustoms({ data, updateData, nextStep, prevSt
           <Label>Agama (Legalitas)</Label>
           <select
             value={data.religion}
-            onChange={(e) => updateData({ religion: e.target.value })}
+            onChange={(e) => updateData({ religion: e.target.value as Religion | "" })}
             className="w-full rounded-lg border border-gray-300 bg-transparent px-5 py-3 text-sm text-gray-800 outline-none transition focus:border-brand-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
           >
             {religions.map((r) => (

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Vendor, VendorCategory } from "@/context/WeddingContext";
+import { Vendor } from "@/context/WeddingContext";
 import Badge from "../ui/badge/Badge";
 
 interface VendorCardProps {

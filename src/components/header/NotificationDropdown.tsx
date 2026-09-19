@@ -1,12 +1,11 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
 import { cn } from "@/utils";
-import Image from "next/image";
+import { Link } from "@/i18n/navigation";
 import { useState, useMemo } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { CalenderIcon, CheckCircleIcon, DollarLineIcon } from "@/icons";
+import { CalenderIcon, DollarLineIcon } from "@/icons";
 import { useWedding } from "@/context/WeddingContext";
 
 export default function NotificationDropdown() {
@@ -27,8 +26,6 @@ export default function NotificationDropdown() {
   };
 
   const { data } = useWedding();
-  const tasks = data?.tasks || [];
-
   const notifications = useMemo(() => {
     const now = new Date();
     const notifs: {
@@ -39,7 +36,7 @@ export default function NotificationDropdown() {
       icon: React.ReactNode;
     }[] = [];
     
-    tasks.forEach(task => {
+    (data?.tasks || []).forEach(task => {
       if (task.status === "Selesai") return;
       
       const dueDate = new Date(task.dueDate);
@@ -66,7 +63,7 @@ export default function NotificationDropdown() {
     });
 
     return notifs.slice(0, 5); // Max 5 notifications
-  }, [tasks]);
+  }, [data?.tasks]);
 
   return (
     <div className="relative">

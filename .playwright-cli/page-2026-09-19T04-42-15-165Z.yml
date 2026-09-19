@@ -1,0 +1,95 @@
+- generic [active] [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e47] [cursor=pointer]
+  - alert [ref=e71]: Nol ke Nikah
+  - generic [ref=e223]:
+    - complementary [ref=e933]:
+      - link [ref=e935] [cursor=pointer]:
+        - /url: /
+        - heading "Nol ke Nikah" [level=1] [ref=e936]
+      - generic [ref=e937]:
+        - navigation [ref=e938]:
+          - generic [ref=e939]:
+            - generic [ref=e940]:
+              - heading "Main Menu" [level=2] [ref=e941]
+              - list [ref=e942]:
+                - listitem [ref=e943]:
+                  - link "Dashboard" [ref=e944] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=e949]:
+                  - link "Timeline" [ref=e950] [cursor=pointer]:
+                    - /url: /timeline
+                - listitem [ref=e955]:
+                  - link "Vendors" [ref=e956] [cursor=pointer]:
+                    - /url: /vendors
+                - listitem [ref=e961]:
+                  - link "Budget" [ref=e962] [cursor=pointer]:
+                    - /url: /budget
+                - listitem [ref=e967]:
+                  - link "Documents" [ref=e968] [cursor=pointer]:
+                    - /url: /documents
+            - generic [ref=e973]:
+              - heading "Others" [level=2] [ref=e974]
+              - list [ref=e975]:
+                - listitem [ref=e976]:
+                  - link "Profile" [ref=e977] [cursor=pointer]:
+                    - /url: /profile
+        - generic [ref=e983]:
+          - heading "Butuh Bantuan?" [level=3] [ref=e984]
+          - paragraph [ref=e985]: Konsultasikan persiapan pernikahanmu dengan tim ahli kami.
+          - link "Hubungi Planner" [ref=e986] [cursor=pointer]:
+            - /url: "#"
+    - generic [ref=e987]:
+      - banner [ref=e988]:
+        - generic [ref=e989]:
+          - generic [ref=e990]:
+            - button "Toggle Sidebar" [ref=e991] [cursor=pointer]
+            - generic [ref=e996]:
+              - textbox "Search anything..." [ref=e997]
+              - button "⌘ K" [ref=e998] [cursor=pointer]:
+                - generic [ref=e999]: ⌘
+                - generic [ref=e1000]: K
+          - generic [ref=e1001]:
+            - generic [ref=e1002]:
+              - button [ref=e1003] [cursor=pointer]
+              - button [ref=e1007] [cursor=pointer]
+            - button "User Budi Santoso" [ref=e1013] [cursor=pointer]:
+              - img "User" [ref=e1015]
+              - generic [ref=e1016]: Budi Santoso
+      - generic [ref=e1019]:
+        - generic [ref=e1020]:
+          - heading "Vendor Management" [level=2] [ref=e1021]
+          - navigation [ref=e1022]:
+            - list [ref=e1023]:
+              - listitem [ref=e1024]:
+                - link "Home" [ref=e1025] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=e1028]: Vendor Management
+        - generic [ref=e1029]:
+          - generic [ref=e1030]:
+            - heading "Daftar Vendor" [level=2] [ref=e1031]
+            - paragraph [ref=e1032]: Catat, bandingkan, dan pantau status semua vendormu.
+          - generic [ref=e1033]:
+            - button "Regenerate" [ref=e1034] [cursor=pointer]
+            - button "+ Tambah Vendor" [ref=e1035] [cursor=pointer]
+        - generic [ref=e1037]:
+          - button "Venue" [ref=e1038] [cursor=pointer]
+          - button "Catering" [ref=e1039] [cursor=pointer]
+          - button "WO" [ref=e1040] [cursor=pointer]
+          - button "Dekorasi" [ref=e1041] [cursor=pointer]
+          - button "Fotografer" [ref=e1042] [cursor=pointer]
+          - button "Videografer" [ref=e1043] [cursor=pointer]
+          - button "MUA & Attire" [ref=e1044] [cursor=pointer]
+          - button "Souvenir" [ref=e1045] [cursor=pointer]
+          - button "Undangan" [ref=e1046] [cursor=pointer]
+          - button "Entertainment" [ref=e1047] [cursor=pointer]
+          - button "Transportasi" [ref=e1048] [cursor=pointer]
+          - button "Cincin & Mahar" [ref=e1049] [cursor=pointer]
+          - button "Lainnya" [ref=e1050] [cursor=pointer]
+        - generic [ref=e1052] [cursor=pointer]:
+          - generic [ref=e1053]:
+            - generic [ref=e1054]:
+              - heading "Gedung Ballroom Sahid" [level=4] [ref=e1055]
+              - paragraph [ref=e1056]: Venue
+            - generic [ref=e1057]: DP
+          - paragraph [ref=e1059]: Rp 45.000.000
+          - paragraph [ref=e1061]: Sudah bayar DP 50%, gladi 1 hari sebelum acara

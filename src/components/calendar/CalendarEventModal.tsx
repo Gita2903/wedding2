@@ -33,6 +33,8 @@ const CalendarEventModal: React.FC<CalendarEventModalProps> = ({
 
   useEffect(() => {
     if (selectedEvent) {
+      // Form state must follow the selected external calendar event.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEventTitle((selectedEvent.title as string) || "");
       const startStr =
         typeof selectedEvent.start === "string"

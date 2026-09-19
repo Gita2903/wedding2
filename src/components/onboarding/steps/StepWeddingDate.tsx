@@ -1,10 +1,13 @@
+"use client";
+
 import React from "react";
+import { OnboardingFormData } from "@/context/WeddingContext";
 import Label from "../../form/Label";
 import Button from "../../ui/button/Button";
 
 interface StepProps {
-  data: any;
-  updateData: (data: any) => void;
+  data: OnboardingFormData;
+  updateData: (data: Partial<OnboardingFormData>) => void;
   nextStep: () => void;
   prevStep: () => void;
 }

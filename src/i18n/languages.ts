@@ -13,6 +13,13 @@ export interface Language {
 
 export const languages: Language[] = [
   {
+    id: "id",
+    name: "Bahasa Indonesia",
+    shortName: "Indonesia",
+    dir: "ltr",
+    FlagIcon: UsFlagIcon,
+  },
+  {
     id: "en",
     name: "English",
     shortName: "English",
